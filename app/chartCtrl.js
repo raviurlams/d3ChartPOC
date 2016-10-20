@@ -1,11 +1,11 @@
 //************* CONSTANTS ***************//
-var margin = { top: 20, right: 120, bottom: 20, left: 120 },
+var margin = { top: 200, right: 120, bottom: 20, left: 120 },
     width = 960 - margin.right - margin.left,
     padding = 100,
     height = 500 - margin.top - margin.bottom,
     yaxis_Max = 0,
     yaxis_Min = 0;
- var color = d3.scale.category10();
+var color = d3.scale.category10();
 
 var YAXIS_LABEL_TEXT = "Year";
 var YAXIS_DATASOURCE_LABEL = "FIRST APPEARED";
@@ -19,13 +19,13 @@ var svg = d3.select("#chart").append("svg")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
+var links = [];
 
 function drawChart(data) {
     yaxis_Max = d3.max(data, getYears);
     yaxis_Min = d3.min(data, getYears);
-
-    drawYAxis();
+    links = prepareLinks(data);
+    // drawYAxis();
     drawChartArea();
 }
 
@@ -54,36 +54,36 @@ function drawYAxis() {
 }
 
 function drawChartArea() {
-    var links = [
-        { source: "Fortran I", target: "Fortran II"},
-        { source: "Fortran II", target: "Fortran IV"},
-        { source: "Fortran IV", target: "Fortran II"},
-        { source: "Fortran IV", target: "Fortran 77"}
-        // { source: "Nokia", target: "Apple"},
-        // { source: "HTC", target: "Apple"},
-        // { source: "Kodak", target: "Apple"},
-        // { source: "Microsoft", target: "Barnes & Noble"},
-        // { source: "Microsoft", target: "Foxconn"},
-        // { source: "Oracle", target: "Google"},
-        // { source: "Apple", target: "HTC"},
-        // { source: "Microsoft", target: "Inventec"},
-        // { source: "Samsung", target: "Kodak"},
-        // { source: "LG", target: "Kodak"},
-        // { source: "RIM", target: "Kodak"},
-        // { source: "Sony", target: "LG"},
-        // { source: "Kodak", target: "LG"},
-        // { source: "Apple", target: "Nokia"},
-        // { source: "Qualcomm", target: "Nokia"},
-        // { source: "Apple", target: "Motorola"},
-        // { source: "Microsoft", target: "Motorola"},
-        // { source: "Motorola", target: "Microsoft"},
-        // { source: "Huawei", target: "ZTE"},
-        // { source: "Ericsson", target: "ZTE"},
-        // { source: "Kodak", target: "Samsung"},
-        // { source: "Apple", target: "Samsung"},
-        // { source: "Kodak", target: "RIM"},
-        // { source: "Nokia", target: "Qualcomm"}
-    ];
+    // var links = [
+    //     { source: "Fortran I", target: "Fortran II" },
+    //     { source: "Fortran II", target: "Fortran IV" },
+    //     { source: "Fortran IV", target: "Fortran II" },
+    //     { source: "Fortran IV", target: "Fortran 77" }
+    //     // { source: "Nokia", target: "Apple"},
+    //     // { source: "HTC", target: "Apple"},
+    //     // { source: "Kodak", target: "Apple"},
+    //     // { source: "Microsoft", target: "Barnes & Noble"},
+    //     // { source: "Microsoft", target: "Foxconn"},
+    //     // { source: "Oracle", target: "Google"},
+    //     // { source: "Apple", target: "HTC"},
+    //     // { source: "Microsoft", target: "Inventec"},
+    //     // { source: "Samsung", target: "Kodak"},
+    //     // { source: "LG", target: "Kodak"},
+    //     // { source: "RIM", target: "Kodak"},
+    //     // { source: "Sony", target: "LG"},
+    //     // { source: "Kodak", target: "LG"},
+    //     // { source: "Apple", target: "Nokia"},
+    //     // { source: "Qualcomm", target: "Nokia"},
+    //     // { source: "Apple", target: "Motorola"},
+    //     // { source: "Microsoft", target: "Motorola"},
+    //     // { source: "Motorola", target: "Microsoft"},
+    //     // { source: "Huawei", target: "ZTE"},
+    //     // { source: "Ericsson", target: "ZTE"},
+    //     // { source: "Kodak", target: "Samsung"},
+    //     // { source: "Apple", target: "Samsung"},
+    //     // { source: "Kodak", target: "RIM"},
+    //     // { source: "Nokia", target: "Qualcomm"}
+    // ];
 
     var nodes = {};
 
@@ -97,7 +97,7 @@ function drawChartArea() {
         .nodes(d3.values(nodes))
         .links(links)
         .size([width, height])
-        .linkDistance(60)
+        .linkDistance(30)
         .charge(-300)
         .on("tick", tick)
         .start();
@@ -128,10 +128,10 @@ function drawChartArea() {
         .attr("class", "node")
         .on("mouseover", mouseover)
         .on("mouseout", mouseout)
-        //.call(force.drag);
+        .call(force.drag);
 
     node.append("circle")
-        .attr("r", 4.5);
+        .attr("r", 9);
 
     node.append("text")
         .attr("x", 12)
@@ -164,13 +164,13 @@ function drawChartArea() {
     function mouseover() {
         d3.select(this).select("circle").transition()
             .duration(750)
-            .attr("r", 6);
+            .attr("r", 12);
     }
 
     function mouseout() {
         d3.select(this).select("circle").transition()
             .duration(750)
-            .attr("r", 4.5);
+            .attr("r", 9);
     }
 
 }
@@ -186,5 +186,30 @@ function refreshChartData() {
 }
 //************* End Helper Functions ***********//
 
+function prepareLinks(data) {   
+    data.sort(function(a,b) {return a["FIRST APPEARED"]-b["FIRST APPEARED"];});
+    var preparedObject = [];    
+    for (var i = 0; i < data.length; i++) {
+        var languageData = data[i];        
+        var elementSource = languageData["LANGUAGE"];
+        var descendentsArray = languageData["DIRECT DESCENDANT(S)"].toUpperCase()!="NONE"? languageData["DIRECT DESCENDANT(S)"].split(","):"";
+        for (var desIndex = 0; desIndex < descendentsArray.length; desIndex++) {
+            var element = {};
+            var descItem = descendentsArray[desIndex];
+            element["source"] = elementSource;
+            element["target"] = descItem;
+            preparedObject.push(element);
+        }
 
+        var ancestorsArray = languageData["DIRECT ANCESTOR(S)"].toUpperCase()!="NONE"? languageData["DIRECT ANCESTOR(S)"].split(","):"";
+        for (var ancestorIndex = 0; ancestorIndex < ancestorsArray.length; ancestorIndex++) {
+            var element = {};
+            var descItem = ancestorsArray[ancestorIndex];
+            element["source"] = descItem;
+            element["target"] = elementSource;
+            preparedObject.push(element);
+        }
+    }
+    return preparedObject;
+}
 refreshChartData();
