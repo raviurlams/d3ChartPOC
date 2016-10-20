@@ -112,7 +112,7 @@ force.nodes().forEach(function(data,i){
         data.x = 220;
         data.y = 150;
         data.px= 220;
-        data.py= 150;   
+        data.py= 150;
     }
 });
 d3.layout.force().on("tick", tick).start();;
