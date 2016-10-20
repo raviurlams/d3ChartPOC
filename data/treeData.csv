@@ -1,1 +1,58 @@
-LANGUAGE,FIRST APPEARED,DIRECT ANCESTOR(S),DIRECT DESCENDANT(S)Fortran I,1957,NONE,Fortran IIFortran II,1958,Fortran I,"Fortran IV, COBOL"Fortran IV,1962,Fortran II,"Fortran 77, BASIC, PL/I"Fortran 77,1977,Fortran IV,Fortran 90Fortran 90,1991,Fortran 77,Fortran 95Fortran 95,1997,Fortran 90,Fortran 2003Fortran 2003,2004,Fortran 95,Fortran 2008Fortran 2008,2010,Fortran 2003,NONEBASIC,1964,Fortran IV,Visual BasicVisual Basic,1991,BASIC,NONECOBOL,1959,Fortran II,"PL/I, ALGOL 58"PL/I,1964,"Fortran IV, COBOL, ALGOL 60",NONEALGOL 58,1958,COBOL,ALGOL 60ALGOL 60,1960,ALGOL 58,"ALGOL W, PL/I, Simula"ALGOL W,1966,ALGOL 60,PascalPascal,1970,ALGOL W,"Euclid, Modula-2, Ada, Clu, ML"Modula-2,1978,Pascal,"Oberon, Modula-3"Modula-3,1989,Modula-2,NONEOberon,1986,Modula-2,NONEEuclid,1977,"Pascal, Simula 67",MesaMesa,1976,Euclid,CedarCedar,1984,Mesa,NONEClu,1974,"Simula 67, Pascal",NONEAda,1980,"Simula 67, Pascal","C++, Ada 95, Ada 2005"Ada 95,1995,Ada,Ada 2005Ada 2005,2007,Ada 95,NONEAlgol 68,1973,ALGOL 60,CBCPL,1966,NONE,CC,1972,"BCPL, ALGOL 68","ANSI C (C90), C++, Perl"ANSI C (C90),1990,C,C99C99,2000,ANSI C (C90),NONEC++,1983,"C, Simula 67","Java, Python"Java,1995,C++,Java 5Java 5,2004,Java,Java 6Java 6,2006,Java 5,NONEC#,2000,"C++, Java","C# 2.0, F#"C# 2.0,2005,C#,C# 3.0C# 3.0,2007,C# 2.0,NONESimula,1965,ALGOL 60,Simula 67Simula 67,1967,Simula,"Euclid, Smalltalk 80"Smalltalk 80,1980,Simula 67,"C++, Eiffel, CLOS"Eiffel,1986,Smalltalk 80,RubyLisp,1958,NONE,"Scheme, ML"Scheme,1970,Lisp,"Common Lisp, Python"Common Lisp,1984,Scheme,CLOSCLOS,1988,Common Lisp,NONEML,1973,Lisp,"Miranda, Caml"Miranda,1986,ML,HaskellHaskell,1990,Miranda,PythonPython,1991,"C++, Scheme, Haskell, Perl",NONERuby,1995,"Eiffel, Python",NONECaml,1985,ML,OcamlOcaml,1996,ML,F#F#,2005,"Ocaml, C#",NONEshell languages,1974,NONE,PerlPerl,1987,shell langauges,PHPPHP,1995,Perl,NONE
+LANGUAGE,VERSIONS,FIRST APPEARED,DIRECT ANCESTOR(S),DIRECT DESCENDANT(S)
+Fortran ,Fortran I,1957,NONE,Fortran II
+Fortran ,Fortran II,1958,Fortran I,"Fortran IV, COBOL"
+Fortran ,Fortran IV,1962,Fortran II,"Fortran 77, BASIC, PL/I"
+Fortran ,Fortran 77,1977,Fortran IV,Fortran 90
+Fortran ,Fortran 90,1991,Fortran 77,Fortran 95
+Fortran ,Fortran 95,1997,Fortran 90,Fortran 2003
+Fortran ,Fortran 2003,2004,Fortran 95,Fortran 2008
+Fortran ,Fortran 2008,2010,Fortran 2003,NONE
+BASIC,BASIC,1964,Fortran IV,Visual Basic
+BASIC,Visual Basic,1991,BASIC,NONE
+COBOL,COBOL,1959,Fortran II,"PL/I, ALGOL 58"
+COBOL,PL/I,1964,"Fortran IV, COBOL, ALGOL 60",NONE
+ALGOL,ALGOL 58,1958,COBOL,ALGOL 60
+ALGOL,ALGOL 60,1960,ALGOL 58,"ALGOL W, PL/I, Simula"
+ALGOL,ALGOL W,1966,ALGOL 60,Pascal
+ALGOL,Pascal,1970,ALGOL W,"Euclid, Modula-2, Ada, Clu, ML"
+Modula,Modula-2,1978,Pascal,"Oberon, Modula-3"
+Modula,Modula-3,1989,Modula-2,NONE
+Oberon,Oberon,1986,Modula-2,NONE
+Euclid,Euclid,1977,"Pascal, Simula 67",Mesa
+Euclid,Mesa,1976,Euclid,Cedar
+Euclid,Cedar,1984,Mesa,NONE
+Clu,Clu,1974,"Simula 67, Pascal",NONE
+Ada,Ada,1980,"Simula 67, Pascal","C++, Ada 95, Ada 2005"
+Ada,Ada 95,1995,Ada,Ada 2005
+Ada,Ada 2005,2007,Ada 95,NONE
+ALGOL,Algol 68,1973,ALGOL 60,C
+BCPL,BCPL,1966,NONE,C
+BCPL,C,1972,"BCPL, ALGOL 68","ANSI C (C90), C++, Perl"
+BCPL,ANSI C (C90),1990,C,C99
+BCPL,C99,2000,ANSI C (C90),NONE
+C++,C++,1983,"C, Simula 67","Java, Python"
+Java,Java,1995,C++,Java 5
+Java,Java 5,2004,Java,Java 6
+Java,Java 6,2006,Java 5,NONE
+C#,C#,2000,"C++, Java","C# 2.0, F#"
+C#,C# 2.0,2005,C#,C# 3.0
+C#,C# 3.0,2007,C# 2.0,NONE
+Simula,Simula,1965,ALGOL 60,Simula 67
+Simula,Simula 67,1967,Simula,"Euclid, Smalltalk 80"
+Smalltalk,Smalltalk 80,1980,Simula 67,"C++, Eiffel, CLOS"
+Eiffel,Eiffel,1986,Smalltalk 80,Ruby
+Lisp,Lisp,1958,NONE,"Scheme, ML"
+Lisp,Scheme,1970,Lisp,"Common Lisp, Python"
+Lisp,Common Lisp,1984,Scheme,CLOS
+CLOS,CLOS,1988,Common Lisp,NONE
+ML,ML,1973,Lisp,"Miranda, Caml"
+Miranda,Miranda,1986,ML,Haskell
+Haskell,Haskell,1990,Miranda,Python
+Python,Python,1991,"C++, Scheme, Haskell, Perl",NONE
+Ruby,Ruby,1995,"Eiffel, Python",NONE
+Caml,Caml,1985,ML,Ocaml
+Caml,Ocaml,1996,ML,F#
+F#,F#,2005,"Ocaml, C#",NONE
+shell languages,shell languages,1974,NONE,Perl
+Perl,Perl,1987,shell langauges,PHP
+PHP,PHP,1995,Perl,NONE

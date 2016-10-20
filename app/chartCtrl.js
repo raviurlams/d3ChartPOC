@@ -9,6 +9,11 @@ var color = d3.scale.category10();
 
 var YAXIS_LABEL_TEXT = "Year";
 var YAXIS_DATASOURCE_LABEL = "FIRST APPEARED";
+var VERSIONS = "VERSIONS";
+var DATASOURCE_DESCE_LABEL = "DIRECT DESCENDANT(S)";
+var DATASOURCE_ANCE_LABEL = "DIRECT ANCESTOR(S)";
+var NONE = "NONE";
+
 var FILE_PATH = "data/treeData.csv";
 
 //************* END of CONSTANTS ***************//
@@ -55,10 +60,12 @@ function drawYAxis() {
 
 function drawChartArea() {
     var links = [
-        { source: "Fortran I", target: "Fortran II" }
-        // { source: "Fortran II", target: "Fortran IV" },
-        // { source: "Fortran IV", target: "Fortran II" },
-        // { source: "Fortran IV", target: "Fortran 77" }
+        { source: "Fortran I", target: "Fortran II" },
+        { source: "Fortran II", target: "Fortran IV" },
+        { source: "Fortran IV", target: "Fortran 77" },
+        { source: "Fortran 77", target: "Fortran 95" },
+        { source: "Fortran 95", target: "Fortran 2003" },
+        { source: "Fortran 2003", target: "Fortran 2008" }
         // { source: "Nokia", target: "Apple"},
         // { source: "HTC", target: "Apple"},
         // { source: "Kodak", target: "Apple"},
@@ -101,21 +108,45 @@ function drawChartArea() {
         .charge(-300)
         // .on("tick", tick)
         // .start();
-force.nodes().forEach(function(data,i){
-    if(i==0){
-        data.x = 220;
-        data.y = 0;
-        data.px= 220;
-        data.py= 0;
-    }
-    else{
-        data.x = 220;
-        data.y = 150;
-        data.px= 220;
-        data.py= 150;
-    }
-});
-d3.layout.force().on("tick", tick).start();;
+    force.nodes().forEach(function(data, i) {
+        if (i == 0) {
+            data.x = 120;
+            data.y = 0;
+            data.px = 120;
+            data.py = 0;
+        } else if (i == 1) {
+            data.x = 120;
+            data.y = 50;
+            data.px = 120;
+            data.py = 50;
+        } else if (i == 2) {
+            data.x = 120;
+            data.y = 150;
+            data.px = 120;
+            data.py = 150;
+        } else if (i == 3) {
+            data.x = 120;
+            data.y = 250;
+            data.px = 120;
+            data.py = 250;
+        } else if (i == 4) {
+            data.x = 120;
+            data.y = 250;
+            data.px = 120;
+            data.py = 250;
+        }else if (i == 5) {
+            data.x = 120;
+            data.y = 350;
+            data.px = 120;
+            data.py = 350;
+        }else if (i == 6) {
+            data.x = 120;
+            data.y = 450;
+            data.px = 120;
+            data.py = 450;
+        }
+    });
+    d3.layout.force().on("tick", tick).start();;
     svg.append("defs").append("marker")
         .attr("id", "arrowhead")
         .attr("refX", 6 + 3) /*must be smarter way to calculate shift*/
@@ -200,13 +231,15 @@ function refreshChartData() {
 }
 //************* End Helper Functions ***********//
 
-function prepareLinks(data) {   
-    data.sort(function(a,b) {return a["FIRST APPEARED"]-b["FIRST APPEARED"];});
-    var preparedObject = [];    
+function prepareLinks(data) {
+    data.sort(function(a, b) {
+        return a[YAXIS_DATASOURCE_LABEL] - b[YAXIS_DATASOURCE_LABEL];
+    });
+    var preparedObject = [];
     for (var i = 0; i < data.length; i++) {
-        var languageData = data[i];        
-        var elementSource = languageData["LANGUAGE"];
-        var descendentsArray = languageData["DIRECT DESCENDANT(S)"].toUpperCase()!="NONE"? languageData["DIRECT DESCENDANT(S)"].split(","):"";
+        var languageData = data[i];
+        var elementSource = languageData[VERSIONS];
+        var descendentsArray = languageData[DATASOURCE_DESCE_LABEL].toUpperCase() != NONE ? languageData[DATASOURCE_DESCE_LABEL].split(",") : "";
         for (var desIndex = 0; desIndex < descendentsArray.length; desIndex++) {
             var element = {};
             var descItem = descendentsArray[desIndex];
@@ -215,7 +248,7 @@ function prepareLinks(data) {
             preparedObject.push(element);
         }
 
-        var ancestorsArray = languageData["DIRECT ANCESTOR(S)"].toUpperCase()!="NONE"? languageData["DIRECT ANCESTOR(S)"].split(","):"";
+        var ancestorsArray = languageData[DATASOURCE_ANCE_LABEL].toUpperCase() != NONE ? languageData[DATASOURCE_ANCE_LABEL].split(",") : "";
         for (var ancestorIndex = 0; ancestorIndex < ancestorsArray.length; ancestorIndex++) {
             var element = {};
             var descItem = ancestorsArray[ancestorIndex];
