@@ -1,5 +1,5 @@
 //************* CONSTANTS ***************//
-var margin = { top: 200, right: 120, bottom: 20, left: 120 },
+var margin = { top: 20, right: 120, bottom: 20, left: 120 },
     width = 960 - margin.right - margin.left,
     padding = 100,
     height = 500 - margin.top - margin.bottom,
@@ -24,8 +24,8 @@ var links = [];
 function drawChart(data) {
     yaxis_Max = d3.max(data, getYears);
     yaxis_Min = d3.min(data, getYears);
-    links = prepareLinks(data);
-    // drawYAxis();
+    // links = prepareLinks(data);
+    drawYAxis();
     drawChartArea();
 }
 
@@ -54,36 +54,36 @@ function drawYAxis() {
 }
 
 function drawChartArea() {
-    // var links = [
-    //     { source: "Fortran I", target: "Fortran II" },
-    //     { source: "Fortran II", target: "Fortran IV" },
-    //     { source: "Fortran IV", target: "Fortran II" },
-    //     { source: "Fortran IV", target: "Fortran 77" }
-    //     // { source: "Nokia", target: "Apple"},
-    //     // { source: "HTC", target: "Apple"},
-    //     // { source: "Kodak", target: "Apple"},
-    //     // { source: "Microsoft", target: "Barnes & Noble"},
-    //     // { source: "Microsoft", target: "Foxconn"},
-    //     // { source: "Oracle", target: "Google"},
-    //     // { source: "Apple", target: "HTC"},
-    //     // { source: "Microsoft", target: "Inventec"},
-    //     // { source: "Samsung", target: "Kodak"},
-    //     // { source: "LG", target: "Kodak"},
-    //     // { source: "RIM", target: "Kodak"},
-    //     // { source: "Sony", target: "LG"},
-    //     // { source: "Kodak", target: "LG"},
-    //     // { source: "Apple", target: "Nokia"},
-    //     // { source: "Qualcomm", target: "Nokia"},
-    //     // { source: "Apple", target: "Motorola"},
-    //     // { source: "Microsoft", target: "Motorola"},
-    //     // { source: "Motorola", target: "Microsoft"},
-    //     // { source: "Huawei", target: "ZTE"},
-    //     // { source: "Ericsson", target: "ZTE"},
-    //     // { source: "Kodak", target: "Samsung"},
-    //     // { source: "Apple", target: "Samsung"},
-    //     // { source: "Kodak", target: "RIM"},
-    //     // { source: "Nokia", target: "Qualcomm"}
-    // ];
+    var links = [
+        { source: "Fortran I", target: "Fortran II" }
+        // { source: "Fortran II", target: "Fortran IV" },
+        // { source: "Fortran IV", target: "Fortran II" },
+        // { source: "Fortran IV", target: "Fortran 77" }
+        // { source: "Nokia", target: "Apple"},
+        // { source: "HTC", target: "Apple"},
+        // { source: "Kodak", target: "Apple"},
+        // { source: "Microsoft", target: "Barnes & Noble"},
+        // { source: "Microsoft", target: "Foxconn"},
+        // { source: "Oracle", target: "Google"},
+        // { source: "Apple", target: "HTC"},
+        // { source: "Microsoft", target: "Inventec"},
+        // { source: "Samsung", target: "Kodak"},
+        // { source: "LG", target: "Kodak"},
+        // { source: "RIM", target: "Kodak"},
+        // { source: "Sony", target: "LG"},
+        // { source: "Kodak", target: "LG"},
+        // { source: "Apple", target: "Nokia"},
+        // { source: "Qualcomm", target: "Nokia"},
+        // { source: "Apple", target: "Motorola"},
+        // { source: "Microsoft", target: "Motorola"},
+        // { source: "Motorola", target: "Microsoft"},
+        // { source: "Huawei", target: "ZTE"},
+        // { source: "Ericsson", target: "ZTE"},
+        // { source: "Kodak", target: "Samsung"},
+        // { source: "Apple", target: "Samsung"},
+        // { source: "Kodak", target: "RIM"},
+        // { source: "Nokia", target: "Qualcomm"}
+    ];
 
     var nodes = {};
 
@@ -92,16 +92,30 @@ function drawChartArea() {
         link.source = nodes[link.source] || (nodes[link.source] = { name: link.source });
         link.target = nodes[link.target] || (nodes[link.target] = { name: link.target });
     });
-    console.log(d3.values(nodes));
+
     var force = d3.layout.force()
         .nodes(d3.values(nodes))
         .links(links)
         .size([width, height])
         .linkDistance(30)
         .charge(-300)
-        .on("tick", tick)
-        .start();
-
+        // .on("tick", tick)
+        // .start();
+force.nodes().forEach(function(data,i){
+    if(i==0){
+        data.x = 220;
+        data.y = 0;
+        data.px= 220;
+        data.py= 0;
+    }
+    else{
+        data.x = 220;
+        data.y = 150;
+        data.px= 220;
+        data.py= 150;   
+    }
+});
+d3.layout.force().on("tick", tick).start();;
     svg.append("defs").append("marker")
         .attr("id", "arrowhead")
         .attr("refX", 6 + 3) /*must be smarter way to calculate shift*/
@@ -128,7 +142,7 @@ function drawChartArea() {
         .attr("class", "node")
         .on("mouseover", mouseover)
         .on("mouseout", mouseout)
-        .call(force.drag);
+        // .call(force.drag);
 
     node.append("circle")
         .attr("r", 9);
