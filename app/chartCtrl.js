@@ -33,14 +33,14 @@ var svg = d3.select("#chartContainer")
 
 // drawing chart area
 function drawChartArea(data) {
-    // links = [
-    //     { source: "Fortran I", target: "Fortran II" },
-    //     { source: "Fortran II", target: "Fortran IV" },
-    //     { source: "Fortran IV", target: "Fortran 77" },
-    //     { source: "Fortran 77", target: "Fortran 95" },
-    //     { source: "Fortran 95", target: "Fortran 2003" },
-    //     { source: "Fortran 2003", target: "Fortran 2008" }
-    // ];
+    links = [
+        { source: "Fortran I", target: "Fortran II" },
+        { source: "Fortran II", target: "Fortran IV" },
+        { source: "Fortran IV", target: "Fortran 77" },
+        { source: "Fortran 77", target: "Fortran 95" },
+        { source: "Fortran 95", target: "Fortran 2003" },
+        { source: "Fortran 2003", target: "Fortran 2008" }
+    ];
     // Compute the distinct nodes from the links.
     links.forEach(function(link) {
         link.source = nodes[link.source] || (nodes[link.source] = { name: link.source });
@@ -58,6 +58,9 @@ function drawChartArea(data) {
     // calculating X/Y and px/py
     calulateXYCoOrdinates();
 
+    // draw the lines
+    d3.layout.force().on("tick", tick).start();
+    
     // adding arrows to charts
     svg.append("defs").append("marker")
         .attr("id", "arrowhead")
@@ -100,6 +103,25 @@ function drawChartArea(data) {
             return d.name;
         });
 
+    function tick() {
+        link.attr("x1", function(d) {
+                return d.source.x;
+            })
+            .attr("y1", function(d) {
+                return d.source.y;
+            })
+            .attr("x2", function(d) {
+                return d.target.x;
+            })
+            .attr("y2", function(d) {
+                return d.target.y;
+            });
+
+        node.attr("transform", function(d) {
+            return "translate(" + d.x + "," + d.y + ")";
+        });
+    } // end of tick func
+
 }
 //************* Helper Functions ***************//
 function calulateXYCoOrdinates() {
@@ -140,9 +162,7 @@ function calulateXYCoOrdinates() {
             data.px = 120;
             data.py = 450;
         }
-    });
-    // draw the lines
-    d3.layout.force().on("tick", tick).start();
+    });    
 }
 var getYears = function(d) {
     return d[YAXIS_DATASOURCE_LABEL]
@@ -157,30 +177,12 @@ function refreshChartData() {
 function drawChart(data) {
     yaxis_Max = d3.max(data, getYears);
     yaxis_Min = d3.min(data, getYears);
-    links = prepareLinks(data);
+    //links = prepareLinks(data);
     drawYAxis();
     drawChartArea(data);
 
 }
 
-function tick() {
-    link.attr("x1", function(d) {
-            return d.source.x;
-        })
-        .attr("y1", function(d) {
-            return d.source.y;
-        })
-        .attr("x2", function(d) {
-            return d.target.x;
-        })
-        .attr("y2", function(d) {
-            return d.target.y;
-        });
-
-    node.attr("transform", function(d) {
-        return "translate(" + d.x + "," + d.y + ")";
-    });
-}
 
 var tip = d3.tip()
     .attr('class', 'd3-tip')
