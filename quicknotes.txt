@@ -1,0 +1,47 @@
+http://jsfiddle.net/cyril123/0vbtvoon/22/
+http://bl.ocks.org/mbostock/3310323
+------------- line
+http://stackoverflow.com/questions/34558943/draw-curve-between-two-points-using-diagonal-function-in-d3-js
+
+
+........... cust --
+http://ilyayakubovich.com/descendant_tree/#stark
+
+---------- 90%..........
+http://bl.ocks.org/d3noob/5141278
+http://bl.ocks.org/mbostock/2706022
+http://jsdatav.is/chap07.html
+
+http://bl.ocks.org/mbostock/f584aa36df54c451c94a9d0798caed35
+
+------------ check boxs----------
+https://bl.ocks.org/rpgove/raw/10603627/
+
+
+
+I would propose splitting it into 2 or 3 phases. Phase 1 being replicate the chart in the PDF. Phase 2 and 3 is to add interactivity and refine the overall chart
+How many hours do you think it will take to ship the first version? (That is, similar to the one in the PDF; no interactive/event driven programming yet)
+
+1.Phase 1 being replicate the chart in the PDF
+
+1. Convert Excel data into Javascript Object 
+2. Create Y axis
+3. Ploting the data points
+4. Drawing the normal/curved lines
+
+
+big task is converting your excel into proper data structure
+[11:13:10 PM] J D: also, i should clarify what i meant by reproducing the chart
+as long as it's in that style, it's fine
+the curves don't have to be exactly the same
+even the X-axis placement of each language doesn't have to be the same. All that matters is that it's similar and readable to the human eye
+[11:13:32 PM] J D: One thing I'm not clear on is if D3.js can spit out charts based on the JSON data that aren't a tangled mess. How will the code go about making a readable chart with optimized spacing of the arrows, etc? Does that question make sense?  I'm not sure how it optimizes for that
+
+the reason I ask is I anticipate having the JSON data change slightly as I add new languages to it, and change the years etc. Will the D3 be able to update on the spot like this?
+[11:13:44 PM] J D: does that make sense?
+
+
+1. x-axis gap ?
+2. arrows stop ? and color. tool tip
+3. Label ?
+
