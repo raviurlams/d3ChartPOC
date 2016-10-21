@@ -10,6 +10,11 @@ var margin = { top: 20, right: 120, bottom: 20, left: 120 },
     link = {},
     node = {},
     force = {},
+    tickDistance = 0,
+    tickGap = 0,
+    unitDiff = 0,
+    tickArr=[],
+    yearsPositionArray = [],
     tip = {};
 
 var YAXIS_LABEL_TEXT = "Year";
@@ -18,6 +23,8 @@ var VERSIONS = "VERSIONS";
 var DATASOURCE_DESCE_LABEL = "DIRECT DESCENDANT(S)";
 var DATASOURCE_ANCE_LABEL = "DIRECT ANCESTOR(S)";
 var NONE = "NONE";
+var LANGUAGE = "LANGUAGE";
+var YEAR_KEY = "year";
 var FILE_PATH = "data/treeData.csv";
 var color = d3.scale.category10();
 
@@ -33,17 +40,9 @@ var svg = d3.select("#chartContainer")
 
 // drawing chart area
 function drawChartArea(data) {
-    links = [
-        { source: "Fortran I", target: "Fortran II" },
-        { source: "Fortran II", target: "Fortran IV" },
-        { source: "Fortran IV", target: "Fortran 77" },
-        { source: "Fortran 77", target: "Fortran 95" },
-        { source: "Fortran 95", target: "Fortran 2003" },
-        { source: "Fortran 2003", target: "Fortran 2008" }
-    ];
     // Compute the distinct nodes from the links.
     links.forEach(function(link) {
-        link.source = nodes[link.source] || (nodes[link.source] = { name: link.source });
+        link.source = nodes[link.source] || (nodes[link.source] = { name: link.source, year: link.source_object[YAXIS_DATASOURCE_LABEL] });
         link.target = nodes[link.target] || (nodes[link.target] = { name: link.target });
     });
 
@@ -60,7 +59,7 @@ function drawChartArea(data) {
 
     // draw the lines
     d3.layout.force().on("tick", tick).start();
-    
+
     // adding arrows to charts
     svg.append("defs").append("marker")
         .attr("id", "arrowhead")
@@ -93,8 +92,8 @@ function drawChartArea(data) {
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide);
 
-    node.append("circle")
-        .attr("r", 9);
+    // node.append("circle")
+    //     .attr("r", 9);
 
     node.append("text")
         .attr("x", 12)
@@ -133,9 +132,9 @@ function calulateXYCoOrdinates() {
             data.py = 0;
         } else if (i == 1) {
             data.x = 120;
-            data.y = 50;
+            data.y = 120;
             data.px = 120;
-            data.py = 50;
+            data.py = 120;
         } else if (i == 2) {
             data.x = 120;
             data.y = 150;
@@ -162,7 +161,10 @@ function calulateXYCoOrdinates() {
             data.px = 120;
             data.py = 450;
         }
-    });    
+        data.y = (unitDiff * getUnitDistance(data[YEAR_KEY]));
+        data.py = (unitDiff * getUnitDistance(data[YEAR_KEY]))+0.5;
+        console.log(data.y," year ", data[YEAR_KEY]);
+    });
 }
 var getYears = function(d) {
     return d[YAXIS_DATASOURCE_LABEL]
@@ -174,15 +176,44 @@ function refreshChartData() {
     });
 }
 
+function getUnitDistance(year){
+    if(year!=undefined){
+        var prevTick = closest(tickArr,year);
+        var res = (year - prevTick) + (tickGap*(tickArr.indexOf(prevTick)));
+        return res;
+    }
+    // will plot at top of the chart if no target year found
+    return 0;
+}
+
+
+
+function closest(array,num){
+    var i=0;
+    var minDiff=1000;
+    var ans;
+    for(i in array){
+         var m=Math.abs(num-array[i]);
+         if(m<minDiff){ 
+                minDiff=m; 
+                ans=array[i]; 
+            }
+      }
+    return ans;
+}
+
+
 function drawChart(data) {
     yaxis_Max = d3.max(data, getYears);
     yaxis_Min = d3.min(data, getYears);
-    //links = prepareLinks(data);
-    drawYAxis();
+
+    links = prepareLinks(data);
+    drawYAxis(data);
     drawChartArea(data);
 
 }
 
+// tickDistance = y(tickArr[2]) - y(tickArr[1]);
 
 var tip = d3.tip()
     .attr('class', 'd3-tip')
@@ -191,16 +222,23 @@ var tip = d3.tip()
         return "<div><strong>Language :</strong> <span style='color:red'>" + d.name + "</span></div>";
     })
 
-function drawYAxis() {
+function drawYAxis(data) {
     // define the y scale  (vertical)
     var yScale = d3.scale.linear()
         .domain([yaxis_Max, yaxis_Min]) // values between yaxis_Min and yaxis_Max
         .range([height, 0])
         .nice();
+
+
+    tickArr = yScale.ticks();
+    tickDistance = yScale(tickArr[1]) - yScale(tickArr[0]);
+    tickGap = tickArr[1] - tickArr[0];
+    unitDiff = (tickDistance / tickGap);
     // define the y axis
     var yAxis = d3.svg.axis()
         .orient("left")
         .scale(yScale).ticks(10).tickFormat(d3.format("04d")).tickPadding(8);
+
     // draw y axis with labels and move in from the size by the amount of padding
     svg.append("g")
         .attr('class', 'y axis')
@@ -213,36 +251,72 @@ function drawYAxis() {
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .text(YAXIS_LABEL_TEXT);
-
 }
 
 function prepareLinks(data) {
+    var result = this.groupBy(data, function(item) {
+        return $.trim(item[LANGUAGE]);
+    });
     data.sort(function(a, b) {
         return a[YAXIS_DATASOURCE_LABEL] - b[YAXIS_DATASOURCE_LABEL];
     });
     var preparedObject = [];
     for (var i = 0; i < data.length; i++) {
         var languageData = data[i];
-        var elementSource = languageData[VERSIONS];
+        var elementSource = $.trim(languageData[VERSIONS]);
         var descendentsArray = languageData[DATASOURCE_DESCE_LABEL].toUpperCase() != NONE ? languageData[DATASOURCE_DESCE_LABEL].split(",") : "";
         for (var desIndex = 0; desIndex < descendentsArray.length; desIndex++) {
             var element = {};
-            var descItem = descendentsArray[desIndex];
+            var descItem = $.trim(descendentsArray[desIndex]);
+            element["is_deviated"] = setIsDeviated(data, result, elementSource, descItem);
             element["source"] = elementSource;
             element["target"] = descItem;
+            element["source_object"] = languageData;
             preparedObject.push(element);
         }
 
         var ancestorsArray = languageData[DATASOURCE_ANCE_LABEL].toUpperCase() != NONE ? languageData[DATASOURCE_ANCE_LABEL].split(",") : "";
         for (var ancestorIndex = 0; ancestorIndex < ancestorsArray.length; ancestorIndex++) {
             var element = {};
-            var descItem = ancestorsArray[ancestorIndex];
+            var descItem = $.trim(ancestorsArray[ancestorIndex]);
+            element["is_deviated"] = setIsDeviated(data, result, elementSource, descItem);
             element["source"] = descItem;
             element["target"] = elementSource;
+            element["source_object"] = languageData;
             preparedObject.push(element);
         }
     }
     return preparedObject;
+}
+
+function groupBy(array, f) {
+    var groups = {};
+    array.forEach(function(o) {
+        var group = f(o);
+        if (groups.hasOwnProperty(group)) {
+            groups[group].push($.trim(o[VERSIONS]));
+        } else {
+            groups[group] = [];
+            groups[group].push($.trim(o[VERSIONS]));
+        }
+    });
+    return groups;
+}
+
+function setIsDeviated(data, result, elementSource, descItem) {
+    var is_deviated = false;
+    var languageArrays = Object.keys(result);
+    var sourceKey;
+    for (var keyIndex = 0; keyIndex < languageArrays.length; keyIndex++) {
+        if (!(result[languageArrays[keyIndex]].indexOf(elementSource) < 0)) {
+            sourceKey = languageArrays[keyIndex];
+            break;
+        }
+    }
+    if (result[sourceKey].indexOf(descItem) < 0) {
+        is_deviated = true;
+    }
+    return is_deviated;
 }
 //************* End Helper Functions ***********//
 
