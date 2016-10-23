@@ -13,7 +13,7 @@ var margin = { top: 20, right: 120, bottom: 20, left: 120 },
     tickDistance = 0,
     tickGap = 0,
     unitDiff = 0,
-    tickArr=[],
+    tickArr = [],
     yearsPositionArray = [],
     tip = {};
 
@@ -124,46 +124,16 @@ function drawChartArea(data) {
 }
 //************* Helper Functions ***************//
 function calulateXYCoOrdinates() {
+    var test = 20;
     force.nodes().forEach(function(data, i) {
-        if (i == 0) {
-            data.x = 120;
-            data.y = 0;
-            data.px = 120;
-            data.py = 0;
-        } else if (i == 1) {
-            data.x = 120;
-            data.y = 120;
-            data.px = 120;
-            data.py = 120;
-        } else if (i == 2) {
-            data.x = 120;
-            data.y = 150;
-            data.px = 120;
-            data.py = 150;
-        } else if (i == 3) {
-            data.x = 120;
-            data.y = 250;
-            data.px = 120;
-            data.py = 250;
-        } else if (i == 4) {
-            data.x = 120;
-            data.y = 250;
-            data.px = 120;
-            data.py = 250;
-        } else if (i == 5) {
-            data.x = 120;
-            data.y = 350;
-            data.px = 120;
-            data.py = 350;
-        } else if (i == 6) {
-            data.x = 120;
-            data.y = 450;
-            data.px = 120;
-            data.py = 450;
-        }
+        console.log(data);
         data.y = (unitDiff * getUnitDistance(data[YEAR_KEY]));
-        data.py = (unitDiff * getUnitDistance(data[YEAR_KEY]))+0.5;
-        console.log(data.y," year ", data[YEAR_KEY]);
+        data.py = (unitDiff * getUnitDistance(data[YEAR_KEY])) + 0.5;
+
+        data.x = i*test;
+        data.px = data.x;
+
+        console.log(data.y, " year ", data[YEAR_KEY]);
     });
 }
 var getYears = function(d) {
@@ -176,10 +146,10 @@ function refreshChartData() {
     });
 }
 
-function getUnitDistance(year){
-    if(year!=undefined){
-        var prevTick = closest(tickArr,year);
-        var res = (year - prevTick) + (tickGap*(tickArr.indexOf(prevTick)));
+function getUnitDistance(year) {
+    if (year != undefined) {
+        var prevTick = closest(tickArr, year);
+        var res = (year - prevTick) + (tickGap * (tickArr.indexOf(prevTick)));
         return res;
     }
     // will plot at top of the chart if no target year found
@@ -188,17 +158,17 @@ function getUnitDistance(year){
 
 
 
-function closest(array,num){
-    var i=0;
-    var minDiff=1000;
+function closest(array, num) {
+    var i = 0;
+    var minDiff = 1000;
     var ans;
-    for(i in array){
-         var m=Math.abs(num-array[i]);
-         if(m<minDiff){ 
-                minDiff=m; 
-                ans=array[i]; 
-            }
-      }
+    for (i in array) {
+        var m = Math.abs(num - array[i]);
+        if (m < minDiff) {
+            minDiff = m;
+            ans = array[i];
+        }
+    }
     return ans;
 }
 
