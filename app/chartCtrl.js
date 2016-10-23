@@ -126,14 +126,14 @@ function drawChartArea(data) {
 function calulateXYCoOrdinates() {
     var test = 20;
     force.nodes().forEach(function(data, i) {
-        console.log(data);
+        // console.log(data);
         data.y = (unitDiff * getUnitDistance(data[YEAR_KEY]));
         data.py = (unitDiff * getUnitDistance(data[YEAR_KEY])) + 0.5;
 
         data.x = i*test;
         data.px = data.x;
 
-        console.log(data.y, " year ", data[YEAR_KEY]);
+        // console.log(data.y, " year ", data[YEAR_KEY]);
     });
 }
 var getYears = function(d) {
@@ -176,11 +176,12 @@ function closest(array, num) {
 function drawChart(data) {
     yaxis_Max = d3.max(data, getYears);
     yaxis_Min = d3.min(data, getYears);
-
+    computeXAxis(data);
     links = prepareLinks(data);
+
     drawYAxis(data);
     drawChartArea(data);
-
+    
 }
 
 // tickDistance = y(tickArr[2]) - y(tickArr[1]);
@@ -241,6 +242,7 @@ function prepareLinks(data) {
             element["is_deviated"] = setIsDeviated(data, result, elementSource, descItem);
             element["source"] = elementSource;
             element["target"] = descItem;
+            element["childs"] = descendentsArray;            
             element["source_object"] = languageData;
             preparedObject.push(element);
         }
@@ -251,11 +253,12 @@ function prepareLinks(data) {
             var descItem = $.trim(ancestorsArray[ancestorIndex]);
             element["is_deviated"] = setIsDeviated(data, result, elementSource, descItem);
             element["source"] = descItem;
-            element["target"] = elementSource;
+            element["target"] = elementSource;            
             element["source_object"] = languageData;
             preparedObject.push(element);
         }
     }
+    console.log(preparedObject," preparedObject");
     return preparedObject;
 }
 
@@ -287,6 +290,22 @@ function setIsDeviated(data, result, elementSource, descItem) {
         is_deviated = true;
     }
     return is_deviated;
+}
+function computeXAxis(data){
+    var result = this.groupBy(data, function(item) {
+        return $.trim(item[LANGUAGE]);
+    });
+    var languageArrays = Object.keys(result);
+    // width
+    var languageWidth = width/languageArrays.length;
+    console.log(languageArrays, languageWidth);
+
+//     var axisScale = d3.scale.linear()
+//                          .domain([0,width])
+//                          .range([0,width]);
+
+// var xAxis = d3.svg.axis()
+//                   .scale(axisScale);
 }
 //************* End Helper Functions ***********//
 
