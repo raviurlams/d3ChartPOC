@@ -1,4 +1,5 @@
 LANGUAGE,VERSIONS,FIRST APPEARED,DIRECT ANCESTOR(S),DIRECT DESCENDANT(S)
+HPF,HPF,1992,Fortran 90,Fortran 95
 Fortran ,Fortran I,1957,NONE,Fortran II
 Fortran ,Fortran II,1958,Fortran I,"Fortran IV, COBOL"
 Fortran ,Fortran IV,1962,Fortran II,"Fortran 77, BASIC, PL/I"
@@ -28,7 +29,7 @@ Ada,Ada 2005,2007,Ada 95,NONE
 ALGOL,Algol 68,1973,ALGOL 60,C
 BCPL,BCPL,1966,NONE,C
 BCPL,C,1972,"BCPL, ALGOL 68","ANSI C (C90), C++, Perl"
-BCPL,ANSI C (C90),1990,C,C99
+BCPL,ANSI C (C90),1990,"C,C++",C99
 BCPL,C99,2000,ANSI C (C90),NONE
 C++,C++,1983,"C, Simula 67","Java, Python"
 Java,Java,1995,C++,Java 5
@@ -51,8 +52,8 @@ Haskell,Haskell,1990,Miranda,Python
 Python,Python,1991,"C++, Scheme, Haskell, Perl",NONE
 Ruby,Ruby,1995,"Eiffel, Python",NONE
 Caml,Caml,1985,ML,Ocaml
-Caml,Ocaml,1996,ML,F#
+Caml,Ocaml,1996,NONE,F#
 F#,F#,2005,"Ocaml, C#",NONE
 shell languages,shell languages,1974,NONE,Perl
-Perl,Perl,1987,shell langauges,PHP
+Perl,Perl,1987,shell languages,PHP
 PHP,PHP,1995,Perl,NONE
