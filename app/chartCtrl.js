@@ -13,8 +13,11 @@ var margin = { top: 20, right: 120, bottom: 20, left: 120 },
     tickDistance = 0,
     tickGap = 0,
     unitDiff = 0,
+    languageWidth=0,
+    xAxisLabels=[],
     tickArr = [],
     yearsPositionArray = [],
+    languageStore={},
     tip = {};
 
 var YAXIS_LABEL_TEXT = "Year";
@@ -41,11 +44,11 @@ var svg = d3.select("#chartContainer")
 // drawing chart area
 function drawChartArea(data) {
     // Compute the distinct nodes from the links.
-    links.forEach(function(link) {
-        link.source = nodes[link.source] || (nodes[link.source] = { name: link.source, year: link.source_object[YAXIS_DATASOURCE_LABEL] });
-        link.target = nodes[link.target] || (nodes[link.target] = { name: link.target });
+    links.forEach(function(link) {        
+        link.source = nodes[link.source.trim().toUpperCase()] || (nodes[link.source.trim().toUpperCase()] = { name: link.source, year: link.source_object[YAXIS_DATASOURCE_LABEL], language: link.source_object[LANGUAGE] });
+        link.target = nodes[link.target.trim().toUpperCase()] || (nodes[link.target.trim().toUpperCase()] = { name: link.target, year: languageStore[link.target][YAXIS_DATASOURCE_LABEL], language: languageStore[link.target][LANGUAGE] });
     });
-
+    // console.log(nodes);
     // start chart rendering
     force = d3.layout.force()
         .nodes(d3.values(nodes))
@@ -92,8 +95,8 @@ function drawChartArea(data) {
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide);
 
-    // node.append("circle")
-    //     .attr("r", 9);
+    node.append("circle")
+        .attr("r", 9);
 
     node.append("text")
         .attr("x", 12)
@@ -123,15 +126,19 @@ function drawChartArea(data) {
 
 }
 //************* Helper Functions ***************//
-function calulateXYCoOrdinates() {
-    var test = 20;
+function calulateXYCoOrdinates() {    
     force.nodes().forEach(function(data, i) {
         // console.log(data);
-        data.y = (unitDiff * getUnitDistance(data[YEAR_KEY]));
-        data.py = (unitDiff * getUnitDistance(data[YEAR_KEY])) + 0.5;
-
-        data.x = i*test;
-        data.px = data.x;
+        if(data[YEAR_KEY]){
+            data.y = (unitDiff * getUnitDistance(data[YEAR_KEY]));
+            data.py = (unitDiff * getUnitDistance(data[YEAR_KEY]));
+        }
+        if(data.language){            
+            var languageIndex = xAxisLabels.indexOf(data.language.trim());
+            data.x = (languageIndex * languageWidth)+120;            
+            data.px = (languageIndex * languageWidth)+120;
+        }
+        
 
         // console.log(data.y, " year ", data[YEAR_KEY]);
     });
@@ -291,21 +298,17 @@ function setIsDeviated(data, result, elementSource, descItem) {
     }
     return is_deviated;
 }
-function computeXAxis(data){
+function computeXAxis(data){    
+    data.forEach(function(eachLanguage){
+        languageStore[eachLanguage[VERSIONS]] = eachLanguage;
+    });
+
     var result = this.groupBy(data, function(item) {
         return $.trim(item[LANGUAGE]);
     });
-    var languageArrays = Object.keys(result);
+    xAxisLabels = Object.keys(result);
     // width
-    var languageWidth = width/languageArrays.length;
-    console.log(languageArrays, languageWidth);
-
-//     var axisScale = d3.scale.linear()
-//                          .domain([0,width])
-//                          .range([0,width]);
-
-// var xAxis = d3.svg.axis()
-//                   .scale(axisScale);
+    languageWidth = width/(xAxisLabels.length+1);
 }
 //************* End Helper Functions ***********//
 
